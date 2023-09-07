@@ -1,4 +1,5 @@
-﻿using Reformat.Framework.Core.Exceptions;
+﻿using Reformat.Framework.Core.Core;
+using Reformat.Framework.Core.Exceptions;
 using Reformat.Framework.Core.IOC.Attributes;
 using Reformat.Framework.Core.IOC.Services;
 using Reformat.Framework.Core.JWT.interfaces;
@@ -9,26 +10,20 @@ using SqlSugar;
 
 namespace Reformat.Framework.SqlSugar.Core;
 
-public abstract class BaseService<T> : ITransaction where T : BaseEntity, new()
+public abstract class SugarService<T> : BaseScopedService,ITransaction where T : SugarEntity, new()
 {
     // Warning：仅可用于系统内部使用，不可进行业务调用和修改
-    [Autowired] public DbConnect _dbContext { get; set; }
+    [Autowired] public SugarDbConnect _dbContext { get; set; }
 
     [Autowired] protected IUserService UserService;
+    
+    protected SugarService(IocScoped iocScoped) : base(iocScoped) { }
 
     private bool isBigSave = false;
-
-    protected IocScoped iocService { get; set; }
 
     public bool _isTraned { get; set; } = false;
 
     protected SqlSugarClient SqlSugar => _dbContext.Db;
-
-    public BaseService(IocScoped iocService)
-    {
-        iocService.Autowired(this);
-        this.iocService = iocService;
-    }
 
     public ISugarQueryable<T> GetQueryable(bool isLogic)
     {

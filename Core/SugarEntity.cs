@@ -8,7 +8,7 @@ namespace Reformat.Framework.SqlSugar.Core;
 /// <summary>
 /// Base实体类
 /// </summary>
-public abstract class BaseEntity
+public abstract class SugarEntity
 {
     /// <summary>
     /// 主键ID

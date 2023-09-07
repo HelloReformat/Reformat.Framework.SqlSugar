@@ -7,7 +7,7 @@ namespace Reformat.Framework.SqlSugar.Aspects.interfaces;
 /// </summary>
 public interface ITransaction
 {
-    public DbConnect _dbContext { get; set; }
+    public SugarDbConnect _dbContext { get; set; }
 
     public bool _isTraned { get; set; }
 }

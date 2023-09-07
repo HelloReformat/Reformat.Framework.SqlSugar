@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Reformat.Framework.Core.Aspects;
+using Reformat.Framework.Core.Core;
 using Reformat.Framework.Core.Exceptions;
 using Reformat.Framework.Core.IOC.Services;
 using Reformat.Framework.Core.MVC;
@@ -11,25 +12,11 @@ namespace Reformat.Framework.SqlSugar.Core;
 [ApiController]
 [Route("api/[controller]/[action]")]
 [ExceptionHandle]
-public abstract class BaseController : ControllerBase
-{
-    public IocScoped iocScoped;
-    
-    public BaseController(IocScoped iocScoped)
-    {
-        iocScoped.Autowired(this);
-        this.iocScoped = iocScoped;
-    }
-}
-
-[ApiController]
-[Route("api/[controller]/[action]")]
-[ExceptionHandle]
-public abstract class BaseController<T,TService> : BaseController where TService : BaseService<T> where T : BaseEntity, new()
+public abstract class SugarController<T,TService> : BaseController where TService : SugarService<T> where T : SugarEntity, new()
 {
     protected abstract TService GetServiceInstance();
     
-    protected BaseController(IocScoped iocScoped) : base(iocScoped)
+    protected SugarController(IocScoped iocScoped) : base(iocScoped)
     {
     }
     

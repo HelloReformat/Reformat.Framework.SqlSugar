@@ -4,13 +4,13 @@ using SqlSugar;
 namespace Reformat.Framework.SqlSugar.Core;
 
 [ScopedService]
-public class DbConnect : IDisposable
+public class SugarDbConnect : IDisposable
 {
     public SqlSugarClient Db { get; }
     private HttpContext httpContext;
     private IConfiguration Icfg;
 
-    public DbConnect(IConfiguration cfg, IHttpContextAccessor Accessor)
+    public SugarDbConnect(IConfiguration cfg, IHttpContextAccessor Accessor)
     {
         Icfg = cfg;
         httpContext = Accessor == null ? null : Accessor.HttpContext;
