@@ -18,17 +18,17 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
         <PackageReference Include="MySql.Data" Version="8.1.0" />
-        <PackageReference Include="SqlSugar" Version="5.1.4.105" />
+        <PackageReference Include="SqlSugarCore" Version="5.1.4.105" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Properties\launchSettings.json" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Reformat.Framework.Core\Reformat.Framework.Core.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <None Remove="Properties\launchSettings.json" />
+    </ItemGroup>
 
 </Project>
