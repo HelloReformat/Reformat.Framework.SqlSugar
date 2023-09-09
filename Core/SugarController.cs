@@ -24,7 +24,7 @@ public abstract class SugarController<T,TService> : BaseController where TServic
     /// 通用: ID查询接口
     /// </summary>
     [HttpGet]
-    public virtual APIResponse<T> Entity([FromQuery] [Required] long id)
+    public virtual ApiResult<T> Entity([FromQuery] [Required] long id)
     {
         T result = GetServiceInstance().GetById(id,true);
         return Api.Rest(result != null,result);
@@ -34,7 +34,7 @@ public abstract class SugarController<T,TService> : BaseController where TServic
     /// 通用: 列表查询接口
     /// </summary>
     // [HttpGet]
-    // public virtual APIResponse<List<T>> List([FromBody] [Required] long[] ids)
+    // public virtual ApiResult<List<T>> List([FromBody] [Required] long[] ids)
     // {
     //     List<T> records = GetServiceInstance().GetByIds(ids);
     //     return Api.Rest(records.Count == ids.Length,records);
@@ -44,7 +44,7 @@ public abstract class SugarController<T,TService> : BaseController where TServic
     /// 通用: 分頁查詢接口
     /// </summary>
     [HttpPost]
-    public virtual async Task<APIResponse<PageList<T>>> Page([FromBody] SqlQuery<T> query)
+    public virtual async Task<ApiResult<PageList<T>>> Page([FromBody] SqlQuery<T> query)
     {
         return Api.RestSuccess( await GetServiceInstance().GetPage(query));
     }
@@ -53,7 +53,7 @@ public abstract class SugarController<T,TService> : BaseController where TServic
     /// 通用: 新增接口
     /// </summary>
     [HttpPut]
-    public virtual APIResponse<string> Create([FromBody] [Required] List<T> request)
+    public virtual ApiResult<string> Create([FromBody] [Required] List<T> request)
     {
         int count = GetServiceInstance().SaveBatch(request);
         if (count != request.Count)
@@ -67,7 +67,7 @@ public abstract class SugarController<T,TService> : BaseController where TServic
     /// 通用: 更新接口
     /// </summary>
     [HttpPut]
-    public virtual APIResponse<string> Update([FromBody] [Required] List<T> request)
+    public virtual ApiResult<string> Update([FromBody] [Required] List<T> request)
     {
         bool result = GetServiceInstance().UpdateBatch(request);
         if (!result)throw new BusinessException("更新失败");
@@ -78,7 +78,7 @@ public abstract class SugarController<T,TService> : BaseController where TServic
     /// 通用: 刪除接口
     /// </summary>
     [HttpDelete]
-    public virtual APIResponse<string> Detele([FromBody] [Required] long[] ids)
+    public virtual ApiResult<string> Detele([FromBody] [Required] long[] ids)
     {
         bool result = GetServiceInstance().DeleteByIds(ids);
         if (!result)throw new BusinessException("删除失败");
