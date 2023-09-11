@@ -230,7 +230,7 @@ public abstract class SugarService<T> : BaseScopedService,ITransaction where T :
     /// <exception cref="PermissionException"></exception>
     public IUser GetCurrentUser()
     {
-        IUser currentUser = UserService.GetUserByToken(iocService.GetTokenManager().GetToken());
+        IUser currentUser = UserService.GetCurrentUser();
         if (currentUser == null)
         {
             throw new PermissionException("当前用户状态异常");
