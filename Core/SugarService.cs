@@ -86,13 +86,10 @@ public abstract class SugarService<T> : BaseScopedService,ITransaction where T :
         return sugarQueryable;
     }
 
-    public async Task<PageList<T1>> BuildPage<T1>(SqlQuery<T1> query, ISugarQueryable<T1> sugarQueryable,
-        bool isWhere = true, bool isOrder = true)
+    public async Task<PageList<T1>> BuildPage<T1>(SqlQuery<T1> query, ISugarQueryable<T1> sugarQueryable, bool isWhere = true, bool isOrder = true)
     {
         if (isWhere) sugarQueryable = await BuildWhereQueryable(query, sugarQueryable);
-        ;
         if (isOrder) sugarQueryable = BuildOrderQueryable(query, sugarQueryable);
-        ;
 
         RefAsync<int> totalCount = 0;
 

@@ -1,5 +1,3 @@
-
-
 namespace Reformat.Framework.SqlSugar.Domain;
 
 public class PageList<T>

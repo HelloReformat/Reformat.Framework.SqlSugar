@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Reformat.Framework.Core.Aspects;
 using Reformat.Framework.Core.Core;
-using Reformat.Framework.Core.Exceptions;
+using Reformat.Framework.Core.IOC.Attributes;
 using Reformat.Framework.Core.IOC.Services;
+using Reformat.Framework.Core.JWT.interfaces;
 using Reformat.Framework.Core.MVC;
 using Reformat.Framework.SqlSugar.Domain;
 
@@ -12,76 +13,48 @@ namespace Reformat.Framework.SqlSugar.Core;
 [ApiController]
 [Route("api/[controller]/[action]")]
 [ExceptionHandle]
-public abstract class SugarController<T,TService> : BaseController where TService : SugarService<T> where T : SugarEntity, new()
+public abstract class SugarController<TService,TEntity> : BaseController,IUserSupport where TService : SugarService<TEntity> where TEntity : SugarEntity, new()
 {
-    protected abstract TService GetServiceInstance();
+    [Autowired] public IUserService UserService { get; set; }
+    
+    [Autowired] public TService ServiceInstance { get; set; }
     
     protected SugarController(IocScoped iocScoped) : base(iocScoped)
     {
     }
-    
+
     /// <summary>
     /// 通用: ID查询接口
     /// </summary>
     [HttpGet]
-    public virtual ApiResult<T> Entity([FromQuery] [Required] long id)
-    {
-        T result = GetServiceInstance().GetById(id,true);
-        return Api.Rest(result != null,result);
-    }
-    
-    /// <summary>
-    /// 通用: 列表查询接口
-    /// </summary>
-    // [HttpGet]
-    // public virtual ApiResult<List<T>> List([FromBody] [Required] long[] ids)
-    // {
-    //     List<T> records = GetServiceInstance().GetByIds(ids);
-    //     return Api.Rest(records.Count == ids.Length,records);
-    // }
-    
+    public abstract ApiResult<TEntity> Entity([FromQuery] [Required] long id);
+
+
+
     /// <summary>
     /// 通用: 分頁查詢接口
     /// </summary>
     [HttpPost]
-    public virtual async Task<ApiResult<PageList<T>>> Page([FromBody] SqlQuery<T> query)
-    {
-        return Api.RestSuccess( await GetServiceInstance().GetPage(query));
-    }
-    
+    public abstract Task<ApiResult<PageList<TEntity>>> Page([FromBody] SqlQuery<TEntity> query);
+
+
     /// <summary>
     /// 通用: 新增接口
     /// </summary>
     [HttpPut]
-    public virtual ApiResult<string> Create([FromBody] [Required] List<T> request)
-    {
-        int count = GetServiceInstance().SaveBatch(request);
-        if (count != request.Count)
-        {
-            throw new BusinessException("新增失败","失败条目数：" + (request.Count - count));
-        }
-        return Api.RestSuccess();
-    }
-    
+    public abstract ApiResult<string> Create([FromBody] [Required] List<TEntity> request);
+
+
     /// <summary>
     /// 通用: 更新接口
     /// </summary>
     [HttpPut]
-    public virtual ApiResult<string> Update([FromBody] [Required] List<T> request)
-    {
-        bool result = GetServiceInstance().UpdateBatch(request);
-        if (!result)throw new BusinessException("更新失败");
-        return Api.RestSuccess();
-    }
-    
+    public abstract ApiResult<string> Update([FromBody] [Required] List<TEntity> request);
+
+
     /// <summary>
     /// 通用: 刪除接口
     /// </summary>
     [HttpDelete]
-    public virtual ApiResult<string> Detele([FromBody] [Required] long[] ids)
-    {
-        bool result = GetServiceInstance().DeleteByIds(ids);
-        if (!result)throw new BusinessException("删除失败");
-        return Api.RestSuccess();
-    }
+    public abstract ApiResult<string> Detele([FromBody] IdsVo deletedVo);
 } 
